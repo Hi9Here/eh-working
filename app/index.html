@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Essential Hotels</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="elements/elements.html">
+    <link rel="import" href="elements/routing.html">
+
+    <style>
+	  
+    neon-animated-pages {
+		height: 100%;
+      }
+    body {
+	    background: url("images/photos/footerdan.jpg")  no-repeat center center fixed; 
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+		height: 100%;
+		width: 100%;
+	    }
+    </style>
+
+    <style is="custom-style">
+
+      :root {
+        --color-one: #33cccc;
+        --color-two: #ff9800;
+        --accent-color: #3cc;
+        
+      }
+	  paper-toolbar {
+      background-color: #0097A7;
+		  font-family: Roboto, Hevetica, Arial, sans-serif;
+  		font-size: 20px;
+	  	font-weight: 300;
+  	}
+	  #eletter {
+		  color: #222222;
+		  font-size:30px;
+		  font-weight: 300;
+	  }
+	  #hletter {
+		  color: #FFFFFF;
+		  font-size: 30px;
+		  font-weight:300;
+	  }
+	  input {
+		  margin: 10px;
+		  font-size: 20px;
+	  }
+	  iron-icon {
+		  margin-left: 10px;
+	  }
+    </style>
+
+  </head>
+  <body class="fullbleed">
+	
+	 <paper-toolbar>
+     <span id="eletter">E</span>
+		 <span id="hletter">H</span>
+		 <span class="flex"></span>
+		 <span>0800 180 4700</span>
+		 <span class="flex"></span>
+		 <!-- <iron-icon icon="refresh"></iron-icon>
+		 <iron-icon icon="search"></iron-icon> -->
+     </paper-toolbar>
+
+    <template is="dom-bind" id="app">
+      <template is="dom-if" if="{{home_page}}">
+        <neon-animated-pages id="pages" selected="0">
+          <circles-page on-circle-click="_onCircleClick" set_filters="{{filtered}}" top_level="{{top_filter}}"></circles-page>
+   
+          <squares-page type="{{type}}"> 
+          </squares-page>
+   
+        </neon-animated-pages>
+
+      </template>
+      <template is="dom-if" if="{{search_page}}">
+        <squares-page type="{{type}}"> 
+          <site-list search="{{search}}" filter="{{filter}}" set_filters="{{filtered}}" top_filter="{{top_filter}}">
+            <div style="background-color: whitesmoke;">
+              <paper-input-container>
+                <label style="font-size:20px;">Search<span>{{filter}}</span></label>		
+                <input is="iron-input" value="{{search::input}}"  class="searchtext" style="font-size:30px; text-align: center; margin-top:25px;"/>
+              </paper-input-container>
+            </div>
+          </site-list>    
+        </squares-page>
+      </template>
+    </template>
+
+    <script>
+
+      var scope = document.querySelector('template[is="dom-bind"]');
+      scope._onCircleClick = function(event) {
+//        this.$.pages.selected = 1;
+      };
+      scope._onSquaresClick = function(event) {
+//        this.$.pages.selected = 0;
+      };
+      scope.home_page = true;
+      scope.search_page = false;
+      scope.properties = {
+        search:{
+          type: String,
+          observer: "setUrl"
+        },
+        filtered: {
+          type: Object,
+          observer: "setUrl"
+        }
+      };
+      scope.setUrl = function () {
+        for ( var filter in this.filtered){
+          if (filter === "type") {
+            var type = Object.keys(this.filtered.type); 
+            page.redirect("/"+type+"/" + this.search );
+          }
+        }
+      }
+    </script>
+
+  </body>
+</html>
